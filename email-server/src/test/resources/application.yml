@@ -1,0 +1,5 @@
+# application.yml for test package
+
+webmail:
+  api:
+    version: api/v1

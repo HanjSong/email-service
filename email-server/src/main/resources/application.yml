@@ -1,0 +1,5 @@
+# application.yml
+
+webmail:
+  api:
+    version: api/v1
