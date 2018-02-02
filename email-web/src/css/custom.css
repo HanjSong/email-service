@@ -1,0 +1,23 @@
+#app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    margin-top: 30px;
+}
+.logo {
+    text-align: center;
+}
+.logo .logo-img {
+    width: 200px;
+    height: 200px;
+}
+.badge {
+    font-size: 100%;
+    line-height: 1.5;
+    padding: .4em .4em;
+}
+.label {
+    line-height: 1.5;
+    padding: .4em .4em;
+}
