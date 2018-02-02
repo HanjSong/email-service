@@ -18,8 +18,8 @@
     </properties>
 
     <modules>
-        <module>email-server</module>
         <module>email-web</module>
+        <module>email-server</module>
     </modules>
 
     <build>
