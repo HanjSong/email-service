@@ -1,2 +1,3 @@
 **/*.iml
-./email-web/node_modules/**
+./email-web/node_modules/**/*
+**/target/**/*
