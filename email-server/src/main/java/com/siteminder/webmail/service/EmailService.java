@@ -40,7 +40,6 @@ public class EmailService {
     public ResponseEntity<String> send(EmailModel mail) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
         // TODO : do not expose sendgrid apikey
-        this.initializeSendGrid("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");
 
         String jsonString = this.jacksonObjectMapper.writeValueAsString(convertToProviderFormat(mail));
 

@@ -42,20 +42,6 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Import sendgrid dependency
-         TODO: remove this sendgrid dependency .. this causes jackson dependency issue
-        <dependency>
-            <groupId>com.sendgrid</groupId>
-            <artifactId>sendgrid-java</artifactId>
-            <version>${sendgrid.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.fasterxml.jackson.core</groupId>
-                    <artifactId>jackson-databind</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency> -->
     </dependencies>
 
     <build>
@@ -67,7 +53,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>
-                         -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=4040
+                        -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=4040
                     </jvmArguments>
                 </configuration>
             </plugin>
