@@ -45,8 +45,8 @@
                         </b-input-group>
                     </b-form-group>
                     <b-form-group id="inputGroup5" label-for="textarea1">
-                        <b-form-textarea id="textarea1" v-model="form.content" :class="inputValidation.content === true ? 'is-valid' : (inputValidation.content === false ? 'is-invalid' : '')"
-                                         tabindex=4 @blur.native="valueValidation('content')" placeholder="Enter something" :rows="3" :max-rows="6">
+                        <b-form-textarea id="textarea1" v-model="form.text" :class="inputValidation.text === true ? 'is-valid' : (inputValidation.text === false ? 'is-invalid' : '')"
+                                         tabindex=4 @blur.native="valueValidation('text')" placeholder="Enter something" :rows="3" :max-rows="6">
                         </b-form-textarea>
                     </b-form-group>
                     <div class="float-right">
@@ -61,6 +61,7 @@
 
 <script>
 import axios from 'axios'
+// TODO : regex does not match backend
 const EMAIL_REGEX = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -74,14 +75,14 @@ export default {
             showMsg: false,
             form: {
                 from: 'idefix.song@gmail.com',
-                content: 'test',
+                text: 'test',
                 subject: 'test',
                 to: ['idefix.song@gmail.com'],
                 cc: [],
                 bcc: []
             },
             inputValidation: {
-                content: true,
+                text: true,
                 subject: true,
                 from: true,
                 to: true
@@ -100,7 +101,7 @@ export default {
             this.form.cc = []
             this.form.bcc = []
             this.form.subject = ''
-            this.form.content = ''
+            this.form.text = ''
             Object.keys(this.inputValidation).forEach((key) => {
                 this.inputValidation[key] = null
             })
@@ -113,13 +114,13 @@ export default {
             this.inputValidation[target] = !!this.form[target]
         },
         sendEmail: function () {
-            if (this.inputValidation.from && this.inputValidation.to && !!this.form.content && !!this.form.subject) {
+            if (this.inputValidation.from && this.inputValidation.to && !!this.form.text && !!this.form.subject) {
                 this.displayMsg(null, true)
                 this.process()
             } else {
                 this.emailMatch('from', this.form.from)
                 this.emailMatch('to', this.form.to)
-                this.valueValidation('content')
+                this.valueValidation('text')
                 this.valueValidation('subject')
                 this.displayMsg('Please check input fields', false)
             }
@@ -132,16 +133,16 @@ export default {
             this.alertMsg.msgType = isSuccess === true ? 'success' : (isSuccess === false ? 'danger' : 'light')
         },
         process () {
-            console.log(JSON.stringify(this.form))
+            // TODO : success response handling needed, message clear onclick
             const data = JSON.stringify(this.form)
-            axios.post(`api/v1/send`, data, {config: {'Content-Type':'application/json'}})
+            axios.post(`api/v1/send`, data)
                 .then(response => {
                     console.log(response)
                     let errMsg = 'Email request has been submitted successfully'
-                    if (response.status === 200) {
-
+                    if (response.status === 200 && response.data === 'success') {
+                        this.onReset()
                     } else {
-                        errMsg = response.data
+                        errMsg = `Something went wrong. Please try again later.`
                     }
                     this.displayMsg(errMsg, response.status === 200)
                 })

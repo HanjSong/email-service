@@ -42,7 +42,25 @@
             <version>${spring.boot.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://spring.io/guides/gs/circuit-breaker/ -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-hystrix</artifactId>
+            <version>1.4.2.RELEASE</version>
+        </dependency>
     </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>Edgware.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
@@ -84,5 +102,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

@@ -2,6 +2,7 @@ package com.siteminder.webmail.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -11,11 +12,12 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EmailModel {
     /**
-     * Sender Email Address
-     * TODO : Sendgrid obj uses Email obj which includes 'Name'. Check with mailgun later
+     * Sender Email Addres
+     * TODO : Both api accepts "Bob <bob@host.com>" format...
      */
     @NotNull
     @Pattern(regexp = "\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b")
+    @JsonProperty("from")
     private String from;
 
     /**
@@ -23,28 +25,33 @@ public class EmailModel {
      * TODO : Use List wrapper for validating all elements
      */
     @NotNull
+    @JsonProperty("to")
     private List<String> to;
 
     /**
      * copy recipients
      */
+    @JsonProperty("cc")
     private List<String> cc;
 
     /**
      * Hidden copy recipients
      */
+    @JsonProperty("bcc")
     private List<String> bcc;
 
     /**
      * Email subject
      */
-    @NotNull
+    @JsonProperty("subject")
     private String subject;
 
     /**
-     * Email content
+     * Email content (text)
      */
-    private String content;
+    @NotNull
+    @JsonProperty("text")
+    private String text;
 
     public String getFrom() {
         return from;
@@ -86,11 +93,11 @@ public class EmailModel {
         this.subject = subject;
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return text;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setText(String text) {
+        this.text = text;
     }
 }

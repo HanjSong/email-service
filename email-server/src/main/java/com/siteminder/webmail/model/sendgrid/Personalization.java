@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * This class is copied from sendgrid package
@@ -21,8 +19,6 @@ public class Personalization {
     private List<Email> ccs;
     @JsonProperty("bcc")
     private List<Email> bccs;
-    @JsonProperty("subject")
-    private String subject;
 
     public Personalization() {
     }
@@ -79,14 +75,5 @@ public class Personalization {
             this.bccs.add(newEmail);
         }
 
-    }
-
-    @JsonProperty("subject")
-    public String getSubject() {
-        return this.subject;
-    }
-
-    public void setSubject(String subject) {
-        this.subject = subject;
     }
 }

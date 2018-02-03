@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
 @RestController
 @RequestMapping("${webmail.api.version}")
 public class EmailController {
@@ -33,7 +31,8 @@ public class EmailController {
      */
     @RequestMapping(value = "/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<String> sendEmail(@RequestBody EmailModel email) throws JsonProcessingException {
-        return emailService.send(email);
+        ResponseEntity<Void> resultEntity = emailService.send(email);
+        return new ResponseEntity<>(resultEntity.getStatusCode().is2xxSuccessful() ? "success" : "error", HttpStatus.OK);
     }
 
 }

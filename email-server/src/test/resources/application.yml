@@ -7,7 +7,16 @@ webmail:
 sendgrid:
   baseuri: https://test.sendgrid.host
   endpoint: /v3/mail/send
+  apikey: dummy-api-key-sendgrid
 
 mailgun:
   baseuri: https://test.mailgun.host
-  endpoint: /v3/mail/send
+  endpoint: /v3/message
+  apikey: dummy-api-key-mailgun
+
+email-provider:
+  ribbon:
+    eureka:
+      enabled: false
+    listOfServers: ${sendgrid.baseuri},${mailgun.baseuri}
+    ServerListRefreshInterval: 15000

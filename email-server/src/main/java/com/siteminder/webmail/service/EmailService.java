@@ -2,72 +2,98 @@ package com.siteminder.webmail.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.siteminder.webmail.client.MailGunRestClient;
+import com.siteminder.webmail.client.SendGridRestClient;
 import com.siteminder.webmail.model.EmailModel;
 import com.siteminder.webmail.model.sendgrid.Content;
 import com.siteminder.webmail.model.sendgrid.Email;
 import com.siteminder.webmail.model.sendgrid.Mail;
 import com.siteminder.webmail.model.sendgrid.Personalization;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class EmailService {
-    @Value("${sendgrid.baseuri}")
-    private String sendGridBaseUri;
 
-    @Value("${sendgrid.endpoint}")
-    private String sendGridEndPoint;
-
-    @Value("${sendgrid.apikey}")
-    private String sendGridApiKey;
+    private final SendGridRestClient sendGridRestClient;
+    private final MailGunRestClient mailGunRestClient;
 
     /**
-     * Spring used objectmapper
+     * Spring ObjectMapper
      */
     private final ObjectMapper jacksonObjectMapper;
 
-    @Autowired
-    public EmailService(ObjectMapper jacksonObjectMapper) {
+    public EmailService(SendGridRestClient sendGridRestClient,
+                        MailGunRestClient mailGunRestClient,
+                        ObjectMapper jacksonObjectMapper) {
+        this.sendGridRestClient = sendGridRestClient;
+        this.mailGunRestClient = mailGunRestClient;
         this.jacksonObjectMapper = jacksonObjectMapper;
     }
 
-    private HttpHeaders requestHeaders;
-
-    public ResponseEntity<String> send(EmailModel mail) throws JsonProcessingException {
-        RestTemplate restTemplate = new RestTemplate();
-        this.initializeSendGrid();
-
-        String jsonString = this.jacksonObjectMapper.writeValueAsString(convertToProviderFormat(mail));
-
-        ResponseEntity<String> resultEntity =
-                restTemplate.postForEntity(sendGridBaseUri + sendGridEndPoint, new HttpEntity<>(jsonString, requestHeaders), String.class);
-        return resultEntity;
+    /**
+     * Send email via MailGun provider
+     * @param mail
+     * @return
+     * @throws JsonProcessingException
+     */
+    @HystrixCommand(fallbackMethod = "fallback")
+    public ResponseEntity<Void> send(EmailModel mail) throws JsonProcessingException {
+        ResponseEntity<String> rslt = this.mailGunRestClient.send(convertToMailGunModel(mail));
+        return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
-    private void initializeSendGrid() {
-        this.requestHeaders = new HttpHeaders();
-        this.requestHeaders.add("Authorization", "Bearer " + this.sendGridApiKey);
-        this.requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
-        this.requestHeaders.add("User-agent", "sendgrid/3.0.0;java");
-        this.requestHeaders.add("Accept", "application/json;charset=UTF-8");
+    /**
+     * Fallback method to send email via SendGrid provider
+     * @param mail
+     * @return
+     * @throws JsonProcessingException
+     */
+    public ResponseEntity<Void> fallback(EmailModel mail) throws JsonProcessingException {
+        return this.sendGridRestClient.send(convertToSendGridModel(mail));
     }
 
-    private Mail convertToProviderFormat(EmailModel mail) {
+    /**
+     * convert to map for mailgun request
+     * @param mail
+     * @return
+     */
+    private MultiValueMap convertToMailGunModel(EmailModel mail) {
+        Map map = jacksonObjectMapper.convertValue(mail, LinkedHashMap.class);
+        MultiValueMap multiValueMap = new LinkedMultiValueMap();
+        map.forEach((key, value) -> {
+            if (value instanceof List) {
+                multiValueMap.add(key, StringUtils.join(((List) value).toArray(), ','));
+            } else {
+                multiValueMap.add(key, value);
+            }
+        });
+        return multiValueMap;
+    }
+
+    /**
+     * convert to SendGrid request model
+     * @param mail
+     * @return
+     */
+    private Mail convertToSendGridModel(EmailModel mail) {
         Mail sendGridMail = new Mail();
         sendGridMail.setFrom(new Email(mail.getFrom()));
-        sendGridMail.addContent(new Content("text/plain", mail.getContent()));
+        sendGridMail.setSubject(mail.getSubject());
+        sendGridMail.addContent(new Content(MediaType.TEXT_PLAIN_VALUE, mail.getText()));
 
         Personalization personalization = new Personalization();
 
         mail.getTo().forEach((to) -> personalization.addTo(new Email(to)));
-        personalization.setSubject(mail.getSubject());
 
         if (!CollectionUtils.isEmpty(mail.getCc())) {
             mail.getCc().forEach((cc) -> personalization.addCc(new Email(cc)));
