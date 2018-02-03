@@ -1,3 +1,4 @@
 **/*.iml
 **/target/**/*
 email-server/src/main/resources/public/**/*
+sendgrid.env

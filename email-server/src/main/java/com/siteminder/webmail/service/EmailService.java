@@ -25,6 +25,9 @@ public class EmailService {
     @Value("${sendgrid.endpoint}")
     private String sendGridEndPoint;
 
+    @Value("${sendgrid.apikey}")
+    private String sendGridApiKey;
+
     /**
      * Spring used objectmapper
      */
@@ -39,7 +42,7 @@ public class EmailService {
 
     public ResponseEntity<String> send(EmailModel mail) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
-        // TODO : do not expose sendgrid apikey
+        this.initializeSendGrid();
 
         String jsonString = this.jacksonObjectMapper.writeValueAsString(convertToProviderFormat(mail));
 
@@ -48,9 +51,9 @@ public class EmailService {
         return resultEntity;
     }
 
-    private void initializeSendGrid(String apiKey) {
+    private void initializeSendGrid() {
         this.requestHeaders = new HttpHeaders();
-        this.requestHeaders.add("Authorization", "Bearer " + apiKey);
+        this.requestHeaders.add("Authorization", "Bearer " + this.sendGridApiKey);
         this.requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         this.requestHeaders.add("User-agent", "sendgrid/3.0.0;java");
         this.requestHeaders.add("Accept", "application/json;charset=UTF-8");
@@ -77,6 +80,5 @@ public class EmailService {
         sendGridMail.addPersonalization(personalization);
 
         return sendGridMail;
-
     }
 }
