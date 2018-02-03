@@ -1,13 +1,18 @@
 package com.siteminder.webmail.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.siteminder.webmail.model.EmailModel;
 import com.siteminder.webmail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("${webmail.api.version}")
@@ -20,8 +25,15 @@ public class EmailController {
         this.emailService = emailService;
     }
 
-    @RequestMapping(value = "/send", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<String> sendEmail() {
-        return new ResponseEntity( "SOME RESPONSE TEST .....", HttpStatus.OK);
+    /**
+     * send email
+     * @param email
+     * @return
+     * @throws JsonProcessingException
+     */
+    @RequestMapping(value = "/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<String> sendEmail(@RequestBody EmailModel email) throws JsonProcessingException {
+        return emailService.send(email);
     }
+
 }

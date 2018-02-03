@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class EmailControllerAdvice {
     private final Logger logger = LoggerFactory.getLogger(EmailControllerAdvice.class);
 
+    /**
+     * Handle exception
+     * TODO : handle custom exception
+     * @param ex
+     * @return
+     */
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<Object> handleException(RuntimeException ex) {
         logger.warn("Exception handler advice", ex);

@@ -63,6 +63,8 @@
 import axios from 'axios'
 const EMAIL_REGEX = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 
+axios.defaults.headers.post['Content-Type'] = 'application/json'
+
 export default {
     name: 'EmailSender',
     data: () => {
@@ -131,7 +133,8 @@ export default {
         },
         process () {
             console.log(JSON.stringify(this.form))
-            axios.get(`api/v1/send`)
+            const data = JSON.stringify(this.form)
+            axios.post(`api/v1/send`, data, {config: {'Content-Type':'application/json'}})
                 .then(response => {
                     console.log(response)
                     let errMsg = 'Email request has been submitted successfully'

@@ -3,3 +3,11 @@
 webmail:
   api:
     version: api/v1
+
+sendgrid:
+  baseuri: https://api.sendgrid.com
+  endpoint: /v3/mail/send
+
+mailgun:
+  baseuri: https://test.mailgun.host
+  endpoint: /v3/mail/send
