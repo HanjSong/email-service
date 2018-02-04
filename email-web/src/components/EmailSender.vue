@@ -75,10 +75,10 @@ export default {
             showMsg: false,
             showLoader: false,
             form: {
-                from: 'idefix.song@gmail.com',
-                text: 'test',
-                subject: 'test',
-                to: ['idefix.song@gmail.com'],
+                from: '',
+                text: '',
+                subject: '',
+                to: [],
                 cc: [],
                 bcc: []
             },

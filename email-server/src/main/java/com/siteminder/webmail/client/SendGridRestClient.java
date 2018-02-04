@@ -3,10 +3,7 @@ package com.siteminder.webmail.client;
 import com.siteminder.webmail.model.sendgrid.Mail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -43,6 +40,6 @@ public class SendGridRestClient {
      */
     public ResponseEntity<String> send(Mail mail) {
         HttpEntity request = new HttpEntity<>(mail, this.requestHeaders);
-        return  this.restTemplate.postForEntity(this.sendGridBaseUri + this.sendGridEndPoint, request, String.class);
+        return  this.restTemplate.exchange(this.sendGridBaseUri + this.sendGridEndPoint, HttpMethod.POST, request, String.class);
     }
 }
