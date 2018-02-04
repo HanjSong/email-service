@@ -5,6 +5,15 @@
     text-align: center;
     margin-top: 30px;
 }
+#inputGroup1 {
+    padding-left:2px;
+}
+#inputGroup2 {
+    padding-left:2px;
+}
+#inputGroup3 {
+    padding-left:2px;
+}
 .logo {
     text-align: center;
 }
@@ -13,9 +22,20 @@
     height: 200px;
 }
 .badge {
-    font-size: 100%;
     line-height: 1.5;
     padding: .4em .4em;
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.badge .email-txt {
+    display: inline-block;
+    width: 85%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    padding-top: 5px;
 }
 .label {
     line-height: 1.5;
