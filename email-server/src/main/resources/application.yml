@@ -11,5 +11,5 @@ sendgrid:
 
 mailgun:
   baseuri: https://api.mailgun.net
-  endpoint: /v3/sandboxd941fefd63804f0c8df97e143ba404ddddd06.mailgun.org/messages
+  endpoint: /v3/sandboxd941fefd63804f0c8df97e143ba40406.mailgun.org/messages
   apikey: ${MAILGUN_API_KEY}

@@ -21,6 +21,11 @@ public class SendGridRestClient {
     private final RestTemplate restTemplate;
     private final HttpHeaders requestHeaders;
 
+    /**
+     * Constructor for SendGrid provider client
+     * @param restTemplate
+     * @param sendGridApiKey
+     */
     @Autowired
     public SendGridRestClient(RestTemplate restTemplate, @Value("${sendgrid.apikey}") String sendGridApiKey) {
         this.restTemplate = restTemplate;
@@ -36,8 +41,8 @@ public class SendGridRestClient {
      * @param mail
      * @return
      */
-    public ResponseEntity<Void> send(Mail mail) {
+    public ResponseEntity<String> send(Mail mail) {
         HttpEntity request = new HttpEntity<>(mail, this.requestHeaders);
-        return  this.restTemplate.postForEntity(this.sendGridBaseUri + this.sendGridEndPoint, request, Void.class);
+        return  this.restTemplate.postForEntity(this.sendGridBaseUri + this.sendGridEndPoint, request, String.class);
     }
 }

@@ -3,9 +3,13 @@ package com.siteminder.webmail.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.siteminder.webmail.client.MailGunRestClient;
 import com.siteminder.webmail.client.SendGridRestClient;
 import com.siteminder.webmail.model.EmailModel;
+import com.siteminder.webmail.model.ResponseCode;
+import com.siteminder.webmail.model.SendMailResponse;
+import com.siteminder.webmail.model.mailgun.MailGunResponseBody;
 import com.siteminder.webmail.model.sendgrid.Content;
 import com.siteminder.webmail.model.sendgrid.Email;
 import com.siteminder.webmail.model.sendgrid.Mail;
@@ -42,24 +46,27 @@ public class EmailService {
 
     /**
      * Send email via MailGun provider
+     * Fallback method timeout is be set to 2500 milliseconds as mailgun server response can be slow.
+     * If mailgun server is not healthy and gets delayed, unfortunately email can be sent twice by fallback call.
      * @param mail
      * @return
-     * @throws JsonProcessingException
      */
-    @HystrixCommand(fallbackMethod = "fallback")
-    public ResponseEntity<Void> send(EmailModel mail) throws JsonProcessingException {
-        ResponseEntity<String> rslt = this.mailGunRestClient.send(convertToMailGunModel(mail));
-        return new ResponseEntity<Void>(HttpStatus.OK);
+    @HystrixCommand(fallbackMethod = "fallback", commandProperties = {
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2500")
+    })
+    public SendMailResponse send(EmailModel mail) {
+        ResponseEntity<MailGunResponseBody> result = this.mailGunRestClient.send(convertToMailGunModel(mail));
+        return new SendMailResponse(ResponseCode.getResponseCode(result.getStatusCode()), result.getBody().getMessage());
     }
 
     /**
      * Fallback method to send email via SendGrid provider
      * @param mail
      * @return
-     * @throws JsonProcessingException
      */
-    public ResponseEntity<Void> fallback(EmailModel mail) throws JsonProcessingException {
-        return this.sendGridRestClient.send(convertToSendGridModel(mail));
+    public SendMailResponse fallback(EmailModel mail) {
+        ResponseEntity<String> result = this.sendGridRestClient.send(convertToSendGridModel(mail));
+        return new SendMailResponse(ResponseCode.getResponseCode(result.getStatusCode()), result.getBody());
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.siteminder.webmail.client;
 
+import com.siteminder.webmail.model.mailgun.MailGunResponseBody;
 import org.bouncycastle.util.encoders.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,7 +24,7 @@ public class MailGunRestClient {
     private final HttpHeaders requestHeaders;
 
     /**
-     * Constructor for MailGun provider
+     * Constructor for MailGun provider client
      * @param restTemplate
      */
     @Autowired
@@ -42,8 +43,9 @@ public class MailGunRestClient {
      * @param mail
      * @return
      */
-    public ResponseEntity<String> send(MultiValueMap mail) {
+    public ResponseEntity<MailGunResponseBody> send(MultiValueMap mail) {
         HttpEntity request = new HttpEntity<>(mail, this.requestHeaders);
-        return this.restTemplate.exchange(this.mailGunBaseUri + this.mailGunEndPoint,  HttpMethod.POST, request, String.class);
+        return this.restTemplate.exchange(
+                this.mailGunBaseUri + this.mailGunEndPoint,  HttpMethod.POST, request, MailGunResponseBody.class);
     }
 }

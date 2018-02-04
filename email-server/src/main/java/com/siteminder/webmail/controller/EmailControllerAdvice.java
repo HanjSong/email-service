@@ -13,13 +13,12 @@ public class EmailControllerAdvice {
 
     /**
      * Handle exception
-     * TODO : handle custom exception
      * @param ex
      * @return
      */
     @ExceptionHandler(RuntimeException.class)
     protected ResponseEntity<Object> handleException(RuntimeException ex) {
-        logger.warn("Exception handler advice", ex);
-        return new ResponseEntity("Something went wrong.", HttpStatus.INTERNAL_SERVER_ERROR);
+        logger.error("Exception caught by handler advice", ex);
+        return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

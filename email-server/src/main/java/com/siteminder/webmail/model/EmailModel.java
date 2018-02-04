@@ -3,28 +3,26 @@ package com.siteminder.webmail.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EmailModel {
     /**
-     * Sender Email Addres
-     * TODO : Both api accepts "Bob <bob@host.com>" format...
+     * Sender Email Address
      */
-    @NotNull
-    @Pattern(regexp = "\\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,4}\\b")
+    @NotEmpty(message = "please input sender's email address")
+    @Email(message = "please provide valid email address")
     @JsonProperty("from")
     private String from;
 
     /**
      * Recipient mail address list
-     * TODO : Use List wrapper for validating all elements
      */
-    @NotNull
+    @NotEmpty(message = "please input at lease one recipient")
     @JsonProperty("to")
     private List<String> to;
 
@@ -49,7 +47,7 @@ public class EmailModel {
     /**
      * Email content (text)
      */
-    @NotNull
+    @NotEmpty(message = "please input content")
     @JsonProperty("text")
     private String text;
 

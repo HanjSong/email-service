@@ -3,20 +3,19 @@
         <b-row align-h="center">
             <b-col cols="8">
                 <b-alert :variant="alertMsg.msgType" show>
-                    <span>&nbsp;</span>
-                    {{showMsg ? alertMsg.message : ''}}
+                    <span>&nbsp;</span>{{alertMsg.message}}
                 </b-alert>
             </b-col>
         </b-row>
         <b-row align-h="center">
             <b-col cols="8">
                 <b-form id="emailForm" @reset="onReset" class="text-left">
-                    <b-form-group horizontal id="inputGroup0" :label-cols="2" label-for="input0" label="* From :">
+                    <b-form-group horizontal id="inputGroup0" :label-cols="2" label-for="input0" label="*From:">
                         <b-form-input id="input0" type="email" v-model.trim="form.from"
                                       @change="emailMatch('from', form.from)" :state="inputValidation.from" required
                                       tabindex=1 placeholder="Enter your email"/>
                     </b-form-group>
-                    <b-form-group horizontal id="inputGroup1" :label-cols="2" label-for="input1" label="* To :">
+                    <b-form-group horizontal id="inputGroup1" :label-cols="2" label-for="input1" label="*To:">
                         <b-input-group>
                             <b-form-input id="input1" type="email" v-model.trim="form.to[0]"
                                           @change="emailMatch('to', form.to[0])" :state="inputValidation.to" required
@@ -37,8 +36,7 @@
                             </b-form-input>
                         </b-input-group>
                     </b-form-group>
-                    <b-form-group horizontal id="inputGroup4" :label-cols="2" label-for="input4" label="* Subject :">
-                        <!-- TODO: reduce text size for small viewport -->
+                    <b-form-group horizontal id="inputGroup4" label-size="sm" :label-cols="2" label-for="input4" label="*Subject:">
                         <b-input-group>
                             <b-form-input id="input4" type="text" v-model="form.subject" :state="inputValidation.subject"
                                           @blur.native="valueValidation('subject')" required tabindex=3 placeholder="Enter Subject"/>
@@ -50,8 +48,9 @@
                         </b-form-textarea>
                     </b-form-group>
                     <div class="float-right">
-                        <b-button variant="info" tabindex=5 @click="sendEmail">Submit</b-button>
-                        <b-button type="reset" tabindex=6>Cancel</b-button>
+                        <div class="loader" v-if="showLoader"></div>
+                        <b-button variant="info" :disabled="btnDisable" tabindex=5 @click="sendEmail">Submit</b-button>
+                        <b-button type="reset" :disabled="btnDisable" tabindex=6>Clear</b-button>
                     </div>
                 </b-form>
             </b-col>
@@ -61,8 +60,8 @@
 
 <script>
 import axios from 'axios'
-// TODO : regex does not match backend
-const EMAIL_REGEX = /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+// EMAIL REGEX from W3C
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
@@ -72,7 +71,9 @@ export default {
         return {
             ccToggle: false,
             bccToggle: false,
+            btnDisable: false,
             showMsg: false,
+            showLoader: false,
             form: {
                 from: 'idefix.song@gmail.com',
                 text: 'test',
@@ -95,7 +96,10 @@ export default {
     },
     methods: {
         onReset: function (evt) {
-            evt.preventDefault()
+            if (evt) {
+                // If triggered from ui
+                evt.preventDefault()
+            }
             this.form.from = ''
             this.form.to = []
             this.form.cc = []
@@ -115,40 +119,45 @@ export default {
         },
         sendEmail: function () {
             if (this.inputValidation.from && this.inputValidation.to && !!this.form.text && !!this.form.subject) {
-                this.displayMsg(null, true)
+                this.displayMsg()
+                this.disableBtn(true)
                 this.process()
             } else {
                 this.emailMatch('from', this.form.from)
                 this.emailMatch('to', this.form.to)
                 this.valueValidation('text')
                 this.valueValidation('subject')
-                this.displayMsg('Please check input fields', false)
+                this.displayMsg('Please check input fields', 'danger')
             }
         },
-        displayMsg: function (message, isSuccess) {
-            // TODO : message box should either be displayed in a modal or be focused into view if displayed.
+        displayMsg: function (message, msgType) {
             // to clear message, call without parameters
-            this.showMsg = !!message
-            this.alertMsg.message = message
-            this.alertMsg.msgType = isSuccess === true ? 'success' : (isSuccess === false ? 'danger' : 'light')
+            this.alertMsg.message = message || ''
+            this.alertMsg.msgType = msgType || 'light'
         },
-        process () {
-            // TODO : success response handling needed, message clear onclick
+        process: function () {
             const data = JSON.stringify(this.form)
             axios.post(`api/v1/send`, data)
                 .then(response => {
-                    console.log(response)
-                    let errMsg = 'Email request has been submitted successfully'
-                    if (response.status === 200 && response.data === 'success') {
+                    console.log(response, response.status === 200, response.data, response.data.responseCode)
+                    if (response.status === 200 && response.data && response.data.responseCode === 'SUCCESS') {
                         this.onReset()
+                        this.displayMsg('Email request has been submitted successfully', 'success')
+                    } else if (response.status === 200) {
+                        this.displayMsg(`No servers are available to handle your request. Please try again later.`, 'warning')
                     } else {
-                        errMsg = `Something went wrong. Please try again later.`
+                        this.displayMsg(`Something went wrong. Please try again later.`, 'danger')
                     }
-                    this.displayMsg(errMsg, response.status === 200)
+                    this.disableBtn(false)
                 })
                 .catch(e => {
-                    this.displayMsg(`Something went wrong. Please try again later.`, false)
+                    this.displayMsg(`Something went wrong.`, 'danger')
+                    this.disableBtn(false)
                 })
+        },
+        disableBtn: function (disable) {
+            this.btnDisable = disable
+            this.showLoader = disable
         }
     }
 }
