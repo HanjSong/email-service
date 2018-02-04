@@ -139,7 +139,6 @@ export default {
             const data = JSON.stringify(this.form)
             axios.post(`api/v1/send`, data)
                 .then(response => {
-                    console.log(response, response.status === 200, response.data, response.data.responseCode)
                     if (response.status === 200 && response.data && response.data.responseCode === 'SUCCESS') {
                         this.onReset()
                         this.displayMsg('Email request has been submitted successfully', 'success')
