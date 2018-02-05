@@ -41,7 +41,7 @@ mvn -U clean install
 mvn --projects backend spring-boot:run
 ```
 ## Accessing the webpage
-  * If everthing is setup as default, you can now goto `http://localhost:8080` to access page
+  * If everything is setup as default, you can now goto `http://localhost:8080` to access page
  1. From, To, Subject and Content fields are required due to providers' limitation
  2. CC and BCC fields are initially hidden and can be toggled. 
  3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
@@ -86,3 +86,9 @@ mvn --projects backend spring-boot:run
 ## Email Providers
  * Mailgun : https://documentation.mailgun.com/en/latest/
  * Sendgrid : https://sendgrid.com/docs/index.html
+ 
+# TODO
+ * Server side validations for list parameters
+ * Move duplicate input areas to common component (TOs, CCs, BCCs)
+ * Frontend unit test 
+ * Make mvn command execute `source ./apikey.env` if file exists 
