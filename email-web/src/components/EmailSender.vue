@@ -20,83 +20,29 @@
                         </b-input-group>
                     </b-form-group>
 
-                    <b-row class="mx-0 text-left">
-                        <b-col cols="2" class="px-0 pt-2 mb-3">*To:</b-col>
-                        <template v-for="(toEmail, index) in form.to">
-                            <b-col cols="3" class="pr-1 mb-1 pl-0" :key="toEmail">
-                                <b-badge variant="secondary" class="pt-1 pl-2 w-100">
-                                    <span class="email-txt float-left text-left">{{toEmail}}</span>
-                                    <span class="text float-right mt-1 close" @click="removeMail(form.to, index)">&times;</span>
-                                </b-badge>
-                            </b-col>
-                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
-                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
-                        </template>
-                        <b-form-group id="inputGroup1" v-if="form.to.length < maxInputNm" class="col pr-0">
-                            <b-input-group>
-                                <b-form-input id="input1"
-                                              @keyup.native="emailMatcher($event, 'to')"
-                                              @blur.native="emailMatcher($event, 'to')"
-                                              :state="inputValidation.to"
-                                              required
-                                              v-model="toInputValue"
-                                              tabindex="2"
-                                              placeholder="Enter recipient emails"/>
-                            </b-input-group>
-                        </b-form-group>
-                    </b-row>
+                    <email-list-input
+                        ref="toInput"
+                        :mailList="form.to"
+                        fieldName="To"
+                        :displayMsg="displayMsg">
+                    </email-list-input>
 
-                    <b-row class="mx-0 text-left" :class="ccToggle ? null : 'd-none'">
-                        <b-col cols="2" class="px-0 pt-2 mb-3">CC:</b-col>
-                        <template v-for="(ccEmail, index) in form.cc">
-                            <b-col cols="3" class="pr-1 mb-1 pl-0" :key="ccEmail">
-                                <b-badge variant="secondary" class="pt-1 pl-2 w-100">
-                                    <span class="email-txt float-left text-left">{{ccEmail}}</span>
-                                    <span class="text float-right mt-1 close" @click="removeMail(form.cc, index)">&times;</span>
-                                </b-badge>
-                            </b-col>
-                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
-                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
-                        </template>
-                        <b-form-group id="inputGroup2" v-if="form.cc.length < maxInputNm" class="col pr-0">
-                            <b-input-group>
-                                <b-form-input id="input2"
-                                              @keyup.native="emailMatcher($event, 'cc')"
-                                              @blur.native="emailMatcher($event, 'cc')"
-                                              :state="inputValidation.cc"
-                                              v-model="ccInputValue"
-                                              required
-                                              tabindex="3"
-                                              placeholder="Enter recipient emails"/>
-                            </b-input-group>
-                        </b-form-group>
-                    </b-row>
+                    <email-list-input
+                        ref="ccInput"
+                        :mailList="form.cc"
+                        fieldName="CC"
+                        :class="ccToggle ? null : 'd-none'"
+                        :displayMsg="displayMsg">
+                    </email-list-input>
 
-                    <b-row class="mx-0 text-left" :class="bccToggle ? null : 'd-none'">
-                        <b-col cols="2" class="px-0 pt-2 mb-3">BCC:</b-col>
-                        <template v-for="(bccEmail, index) in form.bcc">
-                            <b-col cols="3" class="pr-1 mb-1 pl-0" :key="bccEmail">
-                                <b-badge variant="secondary" class="pt-1 pl-2 w-100">
-                                    <span class="email-txt float-left text-left">{{bccEmail}}</span>
-                                    <span class="text float-right mt-1 close" @click="removeMail(form.bcc, index)">&times;</span>
-                                </b-badge>
-                            </b-col>
-                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
-                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
-                        </template>
-                        <b-form-group id="inputGroup3" v-if="form.bcc.length < maxInputNm" class="col pr-0">
-                            <b-input-group>
-                                <b-form-input id="input3"
-                                              @keyup.native="emailMatcher($event, 'bcc')"
-                                              @blur.native="emailMatcher($event, 'bcc')"
-                                              :state="inputValidation.bcc"
-                                              v-model="bccInputValue"
-                                              required
-                                              tabindex="4"
-                                              placeholder="Enter recipient emails"/>
-                            </b-input-group>
-                        </b-form-group>
-                    </b-row>
+                    <email-list-input
+                        ref="bccInput"
+                        :mailList="form.bcc"
+                        fieldName="BCC"
+                        :class="bccToggle ? null : 'd-none'"
+                        :displayMsg="displayMsg">
+                    </email-list-input>
+
                     <b-form-group horizontal id="inputGroup4" label-size="sm" :label-cols="2" label-for="input4" label="*Subject:">
                         <b-input-group>
                             <b-form-input id="input4" type="text" v-model="form.subject" :state="inputValidation.subject"
@@ -121,12 +67,14 @@
 
 <script>
 import axios from 'axios'
+import EmailListInput from './EmailListInput.vue'
 // EMAIL REGEX to closely match RFC 2822
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 export default {
+    components: {EmailListInput},
     name: 'EmailSender',
     data: () => {
         return {
@@ -151,10 +99,7 @@ export default {
             inputValidation: {
                 text: null,
                 subject: null,
-                from: null,
-                to: null,
-                cc: null,
-                bcc: null
+                from: null
             },
             alertMsg: {
                 message: '',
@@ -162,8 +107,7 @@ export default {
             },
             toInputValue: '',
             ccInputValue: '',
-            bccInputValue: '',
-            maxInputNm: 9
+            bccInputValue: ''
         }
     },
     methods: {
@@ -181,63 +125,22 @@ export default {
             Object.keys(this.inputValidation).forEach((key) => {
                 this.inputValidation[key] = null
             })
+            Object.keys(this.$refs).forEach((key) => {
+                this.$refs[key].fieldValidation = null
+            })
             this.displayMsg()
-        },
-        emailMatcher: function (evt, field) {
-            const onBlur = !evt || evt.type === 'blur'
-            this.inputValidation[field] = null
-            // catch event for space, enter, comma, semicolon
-            // TODO : check this event handling works fine with IE Edge and FF
-            this.displayMsg()
-            if (onBlur || (evt.target.value && (evt.keyCode === 13 || evt.keyCode === 186 || evt.keyCode === 188 || evt.keyCode === 59 || evt.keyCode === 32))) {
-                let value = evt.target.value
-                evt.preventDefault()
-                if (evt.target.value.match(evt.key + '$') && evt.keyCode !== 13) { // endswith
-                    value = evt.target.value.replace(/.$/, '').trim().toLowerCase()
-                }
-
-                if (value && EMAIL_REGEX.test(value)) {
-                    if (!this.form.to.includes(value) && !this.form.cc.includes(value) && !this.form.bcc.includes(value)) {
-                        this.form[field].push(value)
-                    } else {
-                        this.displayMsg(`Input email address already exists.`, 'info')
-                    }
-                    evt.target.value = ''
-                    this.inputValidation[field] = null
-                } else {
-                    this.inputValidation[field] = value.length > 0 ? false : null
-                }
-
-                if (this.form[field].length > 10) {
-                    this.displayMsg(`Limited to 11 email addresses for each recipient type.`, 'info')
-                }
-            } else if (!evt.target.value && evt.keyCode === 8) {
-                // backspace
-                const length = this.form[field].length
-                if (length > 0 && evt.target.value.length === 0 && this.deletePrevFlag[field]) {
-                    this.removeMail(this.form[field], length - 1)
-                    this.deletePrevFlag[field] = false
-                } else if (length > 0 && evt.target.value.length === 0) {
-                    this.deletePrevFlag[field] = true
-                } else {
-                    this.deletePrevFlag[field] = false
-                }
-            } else {
-                this.deletePrevFlag[field] = false
-            }
-            //  EMAIL_REGEX.test(value)
         },
         toggleInput: function (toggleField) {
             if (toggleField === 'bcc') {
                 this.bccToggle = !this.bccToggle
                 this.form.bcc = []
-                this.inputValidation.bcc = null
-                this.bccInputValue = ''
+                this.$refs.bccInput.fieldValidation = null
+                this.$refs.bccInput.inputValue = ''
             } else {
                 this.ccToggle = !this.ccToggle
                 this.form.cc = []
-                this.inputValidation.cc = null
-                this.ccInputValue = ''
+                this.$refs.ccInput.fieldValidation = null
+                this.$refs.ccInput.inputValue = ''
             }
         },
         removeMail: function (recipientArr, index) {
@@ -251,7 +154,7 @@ export default {
         },
         toValidation: function () {
             if (this.form.to.length < 1) {
-                this.inputValidation.to = !!this.toInputValue
+                this.$refs.toInput.fieldValidation = !!this.$refs.toInput.inputValue
             }
         },
         sendEmail: function () {
