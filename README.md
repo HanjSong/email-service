@@ -85,6 +85,7 @@ mvn --projects backend spring-boot:run
  * Springboot : https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
 ## Email Providers
  * Mailgun : https://documentation.mailgun.com/en/latest/
+   * To use Mailgun free api, email addresses should be added in whitelist
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
