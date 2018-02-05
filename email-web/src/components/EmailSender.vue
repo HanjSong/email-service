@@ -29,9 +29,10 @@
                                     <span class="text float-right mt-1 close" @click="removeMail(form.to, index)">&times;</span>
                                 </b-badge>
                             </b-col>
-                            <div class="w-100" v-if="(index < 4 && (index + 1) % 3 === 0) || (index > 5 && (index + 2) % 4 === 0)" :key="index"></div>
+                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
+                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
                         </template>
-                        <b-form-group id="inputGroup1" v-if="form.to.length < 11" class="col pr-0">
+                        <b-form-group id="inputGroup1" v-if="form.to.length < maxInputNm" class="col pr-0">
                             <b-input-group>
                                 <b-form-input id="input1"
                                               @keyup.native="emailMatcher($event, 'to')"
@@ -54,9 +55,10 @@
                                     <span class="text float-right mt-1 close" @click="removeMail(form.cc, index)">&times;</span>
                                 </b-badge>
                             </b-col>
-                            <div class="w-100" v-if="(index < 4 && (index + 1) % 3 === 0) || (index > 5 && (index + 2) % 4 === 0)" :key="index"></div>
+                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
+                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
                         </template>
-                        <b-form-group id="inputGroup2" v-if="form.cc.length < 11" class="col pr-0">
+                        <b-form-group id="inputGroup2" v-if="form.cc.length < maxInputNm" class="col pr-0">
                             <b-input-group>
                                 <b-form-input id="input2"
                                               @keyup.native="emailMatcher($event, 'cc')"
@@ -79,9 +81,10 @@
                                     <span class="text float-right mt-1 close" @click="removeMail(form.bcc, index)">&times;</span>
                                 </b-badge>
                             </b-col>
-                            <div class="w-100" v-if="(index < 4 && (index + 1) % 3 === 0) || (index > 5 && (index + 2) % 4 === 0)" :key="index"></div>
+                            <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
+                            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
                         </template>
-                        <b-form-group id="inputGroup3" v-if="form.bcc.length < 11" class="col pr-0">
+                        <b-form-group id="inputGroup3" v-if="form.bcc.length < maxInputNm" class="col pr-0">
                             <b-input-group>
                                 <b-form-input id="input3"
                                               @keyup.native="emailMatcher($event, 'bcc')"
@@ -159,7 +162,8 @@ export default {
             },
             toInputValue: '',
             ccInputValue: '',
-            bccInputValue: ''
+            bccInputValue: '',
+            maxInputNm: 9
         }
     },
     methods: {
