@@ -9,7 +9,7 @@ This web application is a simple implementation of email send request service vi
  * npm (>= 3.0.0)
 
 ## Build & Run
-#### NOTE before running the Springboot app
+#### ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) NOTE before running the Springboot app
  * Private APIKEYS for both Mailgun and Sendgrid providers should be set to environment variables.
  You can either choose to save it in your bashrc profile or save it in a file and execute before running the app.
  This is also noted in Sendgrid api guideline.
@@ -21,7 +21,7 @@ export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
  ```
  and before starting the app run  
  ```
- source ./sendgrid.env
+ source ./apikey.env
  ```
 
 ### 1. Running front-end development mode
@@ -52,7 +52,7 @@ mvn --projects backend spring-boot:run
  `Content-Type` | application/json
  
  #### Data
- ```
+ ```json
 {
   "from":"sender@testmail.com",
   "subject":"Email Subject",
@@ -73,7 +73,7 @@ mvn --projects backend spring-boot:run
  * **ResponseBody** will be empty(null) if both provider fails to send email. In this case, status code will be 500. 
  * `responseCode` can either be `SUCCESS` or `ERROR` depending on email submission status from email providers.
  * `body` contains submit status message from email providers if exists.
- ```
+ ```json
 {
   "responseCode":"SUCCESS",
   "body":null
