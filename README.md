@@ -18,7 +18,7 @@ This web application is a simple implementation of email send request service vi
  Note that this variable contains **whole value used for Authorization Header**(Including such as `Bearer`) in request. 
  ```
 export SENDGRID_API_KEY='Bearer ${YOUR_SENDGRID_API_KEY}' 
-export MAILGUN_API_KEY='key:${YOUR_MAILGUN_API_KEY}'
+export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
  ```
  and before starting the app run 
  ```
@@ -92,6 +92,7 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
+ * Update apikey variables to not include Authorization type ('Bearer' or 'Basic')
  * IE / FF compatibility check
  * Frontend unit test 
  * Make mvn command execute `source ./apikey.env` if file exists 
