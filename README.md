@@ -10,7 +10,7 @@ This web application is a simple implementation of email send request service vi
 
 ## Build & Run
 #### NOTE before running the Springboot app
- * Private APIKEYS for both Mailgun and Sendgrid providers should be set in envrionment variables.
+ * Private APIKEYS for both Mailgun and Sendgrid providers should be set to environment variables.
  You can either choose to save it in your bashrc profile or save it in a file and execute before running the app.
  This is also noted in Sendgrid api guideline.
 
