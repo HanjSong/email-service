@@ -90,6 +90,5 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
- * Move duplicate input areas to common component (TOs, CCs, BCCs)
  * Frontend unit test 
  * Make mvn command execute `source ./apikey.env` if file exists 
