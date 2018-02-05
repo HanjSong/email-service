@@ -24,7 +24,7 @@ export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
  source ./sendgrid.env
  ```
 
-### 1. Running front-end development mode web application
+### 1. Running front-end development mode
    * default port for  [`webpack-dev-server`](https://www.npmjs.com/package/webpack-dev-server) is set to 8080. To run, goto `email-service/email-web` path and execute ...
 ```
 npm install   → Install node modules
@@ -36,7 +36,7 @@ npm run dev   → Run webpack-dev-server
 mvn -U clean install 
 ```
 ### 3. Run complete Springboot app
-   * Default port is set to 8080
+   * Default port is set to 8080 (make sure `webpack-dev-server` is not running or change ports to avoid conflict)
 ```
 mvn --projects backend spring-boot:run
 ```
