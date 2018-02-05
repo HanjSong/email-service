@@ -14,12 +14,12 @@ This web application is a simple implementation of email send request service vi
  You can either choose to save it in your bashrc profile or save it in a file and execute before running the app.
  This is also noted in Sendgrid api guideline.
 
- In file - apikey.env
+ Create file `apikey.env` in root project path (`.gitignore` includes this file name and will be ignored during commit)
  ```
 export SENDGRID_API_KEY='${YOUR_SENDGRID_API_KEY}' 
 export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
  ```
- and before starting the app run  
+ and before starting the app run 
  ```
  source ./apikey.env
  ```
