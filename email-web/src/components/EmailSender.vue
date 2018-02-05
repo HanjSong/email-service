@@ -38,6 +38,7 @@
                                               @blur.native="emailMatcher($event, 'to')"
                                               :state="inputValidation.to"
                                               required
+                                              v-model="toInputValue"
                                               tabindex="2"
                                               placeholder="Enter recipient emails"/>
                             </b-input-group>
@@ -156,6 +157,7 @@ export default {
                 message: '',
                 msgType: 'light'
             },
+            toInputValue: '',
             ccInputValue: '',
             bccInputValue: ''
         }
@@ -243,6 +245,11 @@ export default {
         valueValidation: function (target) {
             this.inputValidation[target] = !!this.form[target]
         },
+        toValidation: function () {
+            if (this.form.to.length < 1) {
+                this.inputValidation.to = !!this.toInputValue
+            }
+        },
         sendEmail: function () {
             if (this.inputValidation.from && this.form.to.length > 0 && !!this.form.text && !!this.form.subject) {
                 this.displayMsg()
@@ -250,6 +257,7 @@ export default {
                 this.process()
             } else {
                 this.emailMatch('from', this.form.from)
+                this.toValidation()
                 this.valueValidation('text')
                 this.valueValidation('subject')
                 this.displayMsg('Please check input fields', 'danger')

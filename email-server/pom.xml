@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-hystrix</artifactId>
-            <version>1.4.2.RELEASE</version>
+            <version>${spring.hystrix.version}</version>
         </dependency>
     </dependencies>
 

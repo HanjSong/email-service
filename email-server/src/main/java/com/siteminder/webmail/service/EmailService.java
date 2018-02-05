@@ -1,12 +1,11 @@
 package com.siteminder.webmail.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.siteminder.webmail.client.MailGunRestClient;
 import com.siteminder.webmail.client.SendGridRestClient;
-import com.siteminder.webmail.model.EmailModel;
+import com.siteminder.webmail.model.EmailForm;
 import com.siteminder.webmail.model.ResponseCode;
 import com.siteminder.webmail.model.SendMailResponse;
 import com.siteminder.webmail.model.mailgun.MailGunResponseBody;
@@ -54,7 +53,7 @@ public class EmailService {
     @HystrixCommand(fallbackMethod = "fallback", commandProperties = {
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2500")
     })
-    public SendMailResponse send(EmailModel mail) {
+    public SendMailResponse send(EmailForm mail) {
         ResponseEntity<MailGunResponseBody> result = this.mailGunRestClient.send(convertToMailGunModel(mail));
         return new SendMailResponse(ResponseCode.getResponseCode(result.getStatusCode()), result.getBody().getMessage());
     }
@@ -64,7 +63,7 @@ public class EmailService {
      * @param mail
      * @return
      */
-    public SendMailResponse fallback(EmailModel mail) {
+    public SendMailResponse fallback(EmailForm mail) {
         ResponseEntity<String> result = this.sendGridRestClient.send(convertToSendGridModel(mail));
         return new SendMailResponse(ResponseCode.getResponseCode(result.getStatusCode()), result.getBody());
     }
@@ -74,7 +73,7 @@ public class EmailService {
      * @param mail
      * @return
      */
-    private MultiValueMap convertToMailGunModel(EmailModel mail) {
+    private MultiValueMap convertToMailGunModel(EmailForm mail) {
         Map map = jacksonObjectMapper.convertValue(mail, LinkedHashMap.class);
         MultiValueMap multiValueMap = new LinkedMultiValueMap();
         map.forEach((key, value) -> {
@@ -92,7 +91,7 @@ public class EmailService {
      * @param mail
      * @return
      */
-    private Mail convertToSendGridModel(EmailModel mail) {
+    private Mail convertToSendGridModel(EmailForm mail) {
         Mail sendGridMail = new Mail();
         sendGridMail.setFrom(new Email(mail.getFrom()));
         sendGridMail.setSubject(mail.getSubject());

@@ -1,7 +1,7 @@
 package com.siteminder.webmail.controller;
 
 import com.siteminder.webmail.TestBase;
-import com.siteminder.webmail.model.EmailModel;
+import com.siteminder.webmail.model.EmailForm;
 import com.siteminder.webmail.model.ResponseCode;
 import com.siteminder.webmail.model.SendMailResponse;
 import com.siteminder.webmail.service.EmailService;
@@ -65,7 +65,7 @@ public class EmailControllerTest extends TestBase {
         Mockito.when(emailService.send(any())).thenReturn(emailServiceResponse);
 
         // Invalid email address will throw 400
-        EmailModel emailModel = getTestEmailModel();
+        EmailForm emailModel = getTestEmailModel();
         emailModel.setFrom("notValidEmailAddress.com");
 
         mvc.perform(post("/api/v1/send")

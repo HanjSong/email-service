@@ -2,7 +2,7 @@ package com.siteminder.webmail;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siteminder.webmail.model.EmailModel;
+import com.siteminder.webmail.model.EmailForm;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,8 +14,8 @@ public abstract class TestBase {
         return mapper.writeValueAsString(obj);
     }
     
-    protected EmailModel getTestEmailModel() {
-        EmailModel emailModel = new EmailModel();
+    protected EmailForm getTestEmailModel() {
+        EmailForm emailModel = new EmailForm();
         
         emailModel.setFrom("fromemail@test.com");
         emailModel.setTo(createEmailList(3, "to"));

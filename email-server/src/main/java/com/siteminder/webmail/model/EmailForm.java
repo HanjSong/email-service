@@ -3,6 +3,7 @@ package com.siteminder.webmail.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.siteminder.webmail.model.validator.EmailListConstraint;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -10,7 +11,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-public class EmailModel {
+public class EmailForm {
     /**
      * Sender Email Address
      */
@@ -23,6 +24,7 @@ public class EmailModel {
      * Recipient mail address list
      */
     @NotEmpty(message = "please input at lease one recipient")
+    @EmailListConstraint
     @JsonProperty("to")
     private List<String> to;
 
@@ -30,12 +32,14 @@ public class EmailModel {
      * copy recipients
      */
     @JsonProperty("cc")
+    @EmailListConstraint
     private List<String> cc;
 
     /**
      * Hidden copy recipients
      */
     @JsonProperty("bcc")
+    @EmailListConstraint
     private List<String> bcc;
 
     /**

@@ -1,7 +1,7 @@
 package com.siteminder.webmail.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.siteminder.webmail.model.EmailModel;
+import com.siteminder.webmail.model.EmailForm;
 import com.siteminder.webmail.model.SendMailResponse;
 import com.siteminder.webmail.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class EmailController {
      * @throws JsonProcessingException
      */
     @RequestMapping(value = "/send", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<SendMailResponse> sendEmail(@Valid @RequestBody EmailModel email) throws JsonProcessingException {
+    public ResponseEntity<SendMailResponse> sendEmail(@Valid @RequestBody EmailForm email) throws JsonProcessingException {
         SendMailResponse result = emailService.send(email);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
