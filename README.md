@@ -36,10 +36,15 @@ npm run dev   → Run webpack-dev-server
 mvn -U clean install 
 ```
 ### 3. Run complete Springboot app
-   * Default port is set to 8080, goto `http://localhost:8080` to access the page
+   * Default port is set to 8080
 ```
 mvn --projects backend spring-boot:run
 ```
+## Accessing the webpage
+  * If everthing is setup as default, you can now goto `http://localhost:8080` to access page
+ 1. From, To, Subject and Content fields are required due to providers' limitation
+ 2. CC and BCC fields are initially hidden and can be toggled. 
+ 3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
 
 # API document
  #### Call  
