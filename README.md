@@ -70,7 +70,7 @@ mvn --projects backend spring-boot:run
  ```
  
  #### ResponseBody
- * **ResponseBody** will be empty(null) if both provider fails to send email. In this case, status code of response will be 500 Internal Server Error. 
+ * **ResponseBody** will be empty(null) if both provider fails to send email. In this case, status code will be 500. 
  * `responseCode` can either be `SUCCESS` or `ERROR` depending on email submission status from email providers.
  * `body` contains submit status message from email providers if exists.
  ```
@@ -90,5 +90,6 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
+ * IE / FF compatibility check
  * Frontend unit test 
  * Make mvn command execute `source ./apikey.env` if file exists 
