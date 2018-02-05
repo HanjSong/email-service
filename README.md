@@ -15,9 +15,10 @@ This web application is a simple implementation of email send request service vi
  This is also noted in Sendgrid api guideline.
 
  Create file `apikey.env` in root project path (`.gitignore` includes this file name and will be ignored during commit)
+ Note that this variable contains **whole value used for Authorization Header**(Including such as `Bearer`) in request. 
  ```
-export SENDGRID_API_KEY='${YOUR_SENDGRID_API_KEY}' 
-export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
+export SENDGRID_API_KEY='Bearer ${YOUR_SENDGRID_API_KEY}' 
+export MAILGUN_API_KEY='key:${YOUR_MAILGUN_API_KEY}'
  ```
  and before starting the app run 
  ```
