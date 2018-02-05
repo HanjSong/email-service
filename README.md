@@ -48,7 +48,8 @@ mvn --projects backend spring-boot:run
 
 # API document
  #### Call  
-`POST` | `${HOST_NAME}:8080/api/v1/send` 
+`POST`          | `${HOST_NAME}:8080/api/v1/send` 
+ `Content-Type` | application/json
  
  #### Data
  ```
@@ -89,7 +90,6 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
- * Server side validations for list parameters
  * Move duplicate input areas to common component (TOs, CCs, BCCs)
  * Frontend unit test 
  * Make mvn command execute `source ./apikey.env` if file exists 
