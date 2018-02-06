@@ -46,6 +46,11 @@ mvn --projects backend spring-boot:run
  2. CC and BCC fields are initially hidden and can be toggled. 
  3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
 
+#### Browser Support (Tested) 
+`Chrome`, `Firefox`, `IE EDGE`, `Safari`, `>= IE 10`
+ * For best experience recommended to use modern web browsers. 
+
+
 # API document
  #### Call  
 `POST`          | `${HOST_NAME}:8080/api/v1/send` 
@@ -91,5 +96,5 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
- * IE / FF compatibility check
- * Frontend unit test 
+ * IE 11 and below notice message to recommend to use modern browsers.
+ * Frontend unit test coverage is currently only around 20%
