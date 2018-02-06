@@ -9,19 +9,20 @@ This web application is a simple implementation of email send request service vi
  * npm (>= 3.0.0)
 
 ## Build & Run
-#### NOTE before running the Springboot app
+#### ![#f03c15](https://placehold.it/15/f03c15/000000?text=+) NOTE before running the Springboot app
  * Private APIKEYS for both Mailgun and Sendgrid providers should be set to environment variables.
  You can either choose to save it in your bashrc profile or save it in a file and execute before running the app.
  This is also noted in Sendgrid api guideline.
 
- In file - apikey.env
+ Create file `apikey.env` in root project path (`.gitignore` includes this file name and will be ignored during commit)
+ Note that this variable contains **whole value used for Authorization Header**(Including such as `Bearer`) in request. 
  ```
-export SENDGRID_API_KEY='${YOUR_SENDGRID_API_KEY}' 
+export SENDGRID_API_KEY='Bearer ${YOUR_SENDGRID_API_KEY}' 
 export MAILGUN_API_KEY='${YOUR_MAILGUN_API_KEY}'
  ```
- and before starting the app run  
+ and before starting the app run 
  ```
- source ./sendgrid.env
+ source ./apikey.env
  ```
 
 ### 1. Running front-end development mode
@@ -49,10 +50,11 @@ mvn --projects backend spring-boot:run
 # API document
  #### Call  
 `POST`          | `${HOST_NAME}:8080/api/v1/send` 
+
  `Content-Type` | application/json
  
  #### Data
- ```
+ ```json
 {
   "from":"sender@testmail.com",
   "subject":"Email Subject",
@@ -70,10 +72,10 @@ mvn --projects backend spring-boot:run
  ```
  
  #### ResponseBody
- * **ResponseBody** will be empty(null) if both provider fails to send email. In this case, status code of response will be 500 Internal Server Error. 
+ * **ResponseBody** will be empty(null) if both provider fails to send email. In this case, status code will be 500. 
  * `responseCode` can either be `SUCCESS` or `ERROR` depending on email submission status from email providers.
  * `body` contains submit status message from email providers if exists.
- ```
+ ```json
 {
   "responseCode":"SUCCESS",
   "body":null
@@ -90,6 +92,7 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
- * Move duplicate input areas to common component (TOs, CCs, BCCs)
+ * Update apikey variables to not include Authorization type ('Bearer' or 'Basic')
+ * IE / FF compatibility check
  * Frontend unit test 
  * Make mvn command execute `source ./apikey.env` if file exists 
