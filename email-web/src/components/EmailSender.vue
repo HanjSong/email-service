@@ -1,13 +1,6 @@
 <template>
     <b-container fluid>
         <b-row align-h="center">
-            <!--[if lt IE 11]>
-            <b-col cols="8">
-                <b-alert id="message" variant="warn" show>
-                    Internet Explorer 10 and below will not provide best experience ! Please upgrade your browser
-                </b-alert>
-            </b-col>
-            <![endif]-->
             <b-col cols="8">
                 <b-alert id="message" :variant="alertMsg.msgType" show>
                     <span>&nbsp;</span>{{alertMsg.message}}
