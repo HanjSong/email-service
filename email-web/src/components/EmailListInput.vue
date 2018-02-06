@@ -9,7 +9,7 @@
                 </b-badge>
             </b-col>
             <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
-            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index * 20"></b-col>
+            <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index + 1"></b-col>
         </template>
         <b-form-group id="inputGroup1" v-if="mailList.length < maxInputNm" class="col pr-0">
             <b-input-group>
@@ -38,18 +38,6 @@ export default {
     ],
     data: () => {
         return {
-            ccToggle: false,
-            bccToggle: false,
-            btnDisable: false,
-            showMsg: false,
-            showLoader: false,
-            form: {
-                from: '',
-                text: '',
-                subject: '',
-                cc: [],
-                bcc: []
-            },
             deletePrevFlag: false,
             fieldValidation: null,
             inputValue: '',
@@ -65,13 +53,13 @@ export default {
             const onBlur = !evt || evt.type === 'blur'
             this.fieldValidation = null
             // catch event for space, enter, comma, semicolon
-            // TODO : check this event handling works fine with IE Edge and FF
             this.displayMsg()
-            if (onBlur || (evt.target.value && (evt.keyCode === 13 || evt.keyCode === 186 || evt.keyCode === 188 || evt.keyCode === 59 || evt.keyCode === 32))) {
+            if (onBlur ||
+                (evt.target.value && (evt.keyCode === 13 || evt.keyCode === 186 || evt.keyCode === 188 ||
+                    evt.keyCode === 59 || evt.keyCode === 32))) {
                 let value = evt.target.value
-                evt.preventDefault()
                 if (evt.target.value.match(evt.key + '$') && evt.keyCode !== 13) { // endswith
-                    value = evt.target.value.replace(/.$/, '').trim().toLowerCase()
+                    value = evt.target.value.trim().replace(/[.,;]$/, '').trim().toLowerCase()
                 }
 
                 if (value && EMAIL_REGEX.test(value)) {

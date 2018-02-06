@@ -56,8 +56,8 @@
                     </b-form-group>
                     <div class="float-right">
                         <div class="loader" v-if="showLoader"></div>
-                        <b-button variant="info" :disabled="btnDisable" tabindex=5 @click="sendEmail">Submit</b-button>
-                        <b-button type="reset" :disabled="btnDisable" tabindex=6>Clear</b-button>
+                        <b-button variant="info" :disabled="showLoader" tabindex=5 @click="sendEmail">Submit</b-button>
+                        <b-button type="reset" :disabled="showLoader" tabindex=6>Clear</b-button>
                     </div>
                 </b-form>
             </b-col>
@@ -68,7 +68,7 @@
 <script>
 import axios from 'axios'
 import EmailListInput from './EmailListInput.vue'
-// EMAIL REGEX to closely match RFC 2822
+// EMAIL REGEX which closely match RFC 2822
 const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
@@ -80,8 +80,6 @@ export default {
         return {
             ccToggle: false,
             bccToggle: false,
-            btnDisable: false,
-            showMsg: false,
             showLoader: false,
             form: {
                 from: '',
@@ -91,11 +89,6 @@ export default {
                 cc: [],
                 bcc: []
             },
-            deletePrevFlag: {
-                bcc: false,
-                cc: false,
-                to: false
-            },
             inputValidation: {
                 text: null,
                 subject: null,
@@ -104,10 +97,7 @@ export default {
             alertMsg: {
                 message: '',
                 msgType: 'light'
-            },
-            toInputValue: '',
-            ccInputValue: '',
-            bccInputValue: ''
+            }
         }
     },
     methods: {
@@ -176,7 +166,12 @@ export default {
             this.alertMsg.msgType = msgType || 'light'
 
             if (msgType === 'danger') {
-                document.getElementById('message').scrollIntoView()
+                if (this.$el.querySelector('#message').scrollIntoView) {
+                    this.$el.querySelector('#message').scrollIntoView()
+                } else {
+                    // work around for only IE 10
+                    window.scrollTo(0, 0)
+                }
             }
         },
         process: function () {
@@ -199,7 +194,6 @@ export default {
                 })
         },
         disableBtn: function (disable) {
-            this.btnDisable = disable
             this.showLoader = disable
         }
     }

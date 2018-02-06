@@ -20,6 +20,8 @@ public class MailGunRestClient {
     @Value("${mailgun.endpoint}")
     private String mailGunEndPoint;
 
+    private static final String AUTH_TYPE_TEXT_PREFIX = "Basic ";
+
     private final RestTemplate restTemplate;
     private final HttpHeaders requestHeaders;
 
@@ -34,7 +36,8 @@ public class MailGunRestClient {
 
         this.requestHeaders = new HttpHeaders();
         final byte[] apiKeyBytes = mailGunApiKey.getBytes(Charset.forName("iso-8859-1"));
-        this.requestHeaders.add(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encode(apiKeyBytes), "ASCII"));
+        this.requestHeaders.add(HttpHeaders.AUTHORIZATION,
+                AUTH_TYPE_TEXT_PREFIX + new String(Base64.encode(apiKeyBytes), "ASCII"));
         this.requestHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     }
 

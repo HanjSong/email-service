@@ -15,6 +15,8 @@ public class SendGridRestClient {
     @Value("${sendgrid.endpoint}")
     private String sendGridEndPoint;
 
+    private static final String AUTH_TYPE_TEXT_PREFIX = "Bearer ";
+
     private final RestTemplate restTemplate;
     private final HttpHeaders requestHeaders;
 
@@ -28,7 +30,7 @@ public class SendGridRestClient {
         this.restTemplate = restTemplate;
 
         this.requestHeaders = new HttpHeaders();
-        this.requestHeaders.add(HttpHeaders.AUTHORIZATION, sendGridApiKey);
+        this.requestHeaders.add(HttpHeaders.AUTHORIZATION, AUTH_TYPE_TEXT_PREFIX + sendGridApiKey);
         this.requestHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
         this.requestHeaders.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_UTF8_VALUE);
     }
