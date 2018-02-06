@@ -1,6 +1,6 @@
 <template>
     <b-row class="mx-0 text-left">
-        <b-col cols="2" class="px-0 pt-2 mb-3">*{{fieldName}}:</b-col>
+        <b-col cols="2" class="px-0 pt-2 mb-3 field-name">*{{fieldName}}:</b-col>
         <template v-for="(emailAddr, index) in mailList">
             <b-col cols="3" class="pr-1 mb-1 pl-0" :key="emailAddr">
                 <b-badge variant="secondary" class="pt-1 pl-2 w-100">
@@ -44,7 +44,21 @@ export default {
             maxInputNm: 9
         }
     },
+    created: function () {
+        this.$eventHub.$on('email-list-validation', this.validateField)
+        this.$eventHub.$on(this.fieldName.toLowerCase() + '-email-list-clear', this.clearField)
+        this.$eventHub.$on('clear-email-form', this.clearField)
+    },
     methods: {
+        clearField: function () {
+            this.fieldValidation = null
+            this.inputValue = ''
+        },
+        validateField: function () {
+            if (this.mailList.length < 1) {
+                this.fieldValidation = !!this.inputValue
+            }
+        },
         removeMail: function (recipientArr, index) {
             recipientArr.splice(index, 1)
             this.fieldValidation = null

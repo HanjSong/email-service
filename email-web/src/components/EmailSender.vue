@@ -15,8 +15,8 @@
                             <b-form-input id="input0" type="email" v-model.trim="form.from"
                                           @change="emailMatch('from', form.from)" :state="inputValidation.from" required
                                           tabindex=1 placeholder="Enter your email"/>
-                            <b-btn @click="toggleInput('cc')" :pressed="ccToggle" class="px-3" variant="outline-info">+ CC</b-btn>
-                            <b-btn @click="toggleInput('bcc')" :pressed="bccToggle" variant="outline-info">+ BCC</b-btn>
+                            <b-btn @click="toggleCCInput" :pressed="ccToggle" class="px-3" variant="outline-info">+ CC</b-btn>
+                            <b-btn @click="toggleBCCInput" :pressed="bccToggle" variant="outline-info">+ BCC</b-btn>
                         </b-input-group>
                     </b-form-group>
 
@@ -56,7 +56,7 @@
                     </b-form-group>
                     <div class="float-right">
                         <div class="loader" v-if="showLoader"></div>
-                        <b-button variant="info" :disabled="showLoader" tabindex=5 @click="sendEmail">Submit</b-button>
+                        <b-button type="button" @click="sendEmail" variant="info" :disabled="showLoader" tabindex=5>Submit</b-button>
                         <b-button type="reset" :disabled="showLoader" tabindex=6>Clear</b-button>
                     </div>
                 </b-form>
@@ -115,23 +115,18 @@ export default {
             Object.keys(this.inputValidation).forEach((key) => {
                 this.inputValidation[key] = null
             })
-            Object.keys(this.$refs).forEach((key) => {
-                this.$refs[key].fieldValidation = null
-            })
+            this.$eventHub.$emit('clear-email-form')
             this.displayMsg()
         },
-        toggleInput: function (toggleField) {
-            if (toggleField === 'bcc') {
-                this.bccToggle = !this.bccToggle
-                this.form.bcc = []
-                this.$refs.bccInput.fieldValidation = null
-                this.$refs.bccInput.inputValue = ''
-            } else {
-                this.ccToggle = !this.ccToggle
-                this.form.cc = []
-                this.$refs.ccInput.fieldValidation = null
-                this.$refs.ccInput.inputValue = ''
-            }
+        toggleBCCInput: function (toggleField) {
+            this.bccToggle = !this.bccToggle
+            this.form.bcc = []
+            this.$eventHub.$emit('bcc-email-list-clear')
+        },
+        toggleCCInput: function (toggleField) {
+            this.ccToggle = !this.ccToggle
+            this.form.cc = []
+            this.$eventHub.$emit('cc-email-list-clear')
         },
         removeMail: function (recipientArr, index) {
             recipientArr.splice(index, 1)
@@ -143,9 +138,8 @@ export default {
             this.inputValidation[target] = !!this.form[target]
         },
         toValidation: function () {
-            if (this.form.to.length < 1) {
-                this.$refs.toInput.fieldValidation = !!this.$refs.toInput.inputValue
-            }
+            // Emit event for child component to validate
+            this.$eventHub.$emit('email-list-validation')
         },
         sendEmail: function () {
             if (this.inputValidation.from && this.form.to.length > 0 && !!this.form.text && !!this.form.subject) {

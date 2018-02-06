@@ -8,6 +8,8 @@ import '../css/custom.css'
 Vue.use(Router)
 Vue.use(BootstrapVue)
 
+Vue.prototype.$eventHub = new Vue()
+
 export default new Router({
     routes: [
         {
