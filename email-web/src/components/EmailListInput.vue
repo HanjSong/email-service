@@ -11,15 +11,15 @@
             <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
             <b-col cols="2" class="px-0 pt-2 mb-3" v-if="index < maxInputNm - 1 && (index > 0 && (index + 1) % 3 === 0)" :key="index + 1"></b-col>
         </template>
-        <b-form-group id="inputGroup1" v-if="mailList.length < maxInputNm" class="col pr-0">
+        <b-form-group v-if="mailList.length < maxInputNm" class="col email-list pr-0">
             <b-input-group>
-                <b-form-input id="input1"
-                              @keyup.native="emailMatcher($event)"
+                <b-form-input @keyup.native="emailMatcher($event)"
                               @blur.native="emailMatcher($event)"
                               :state="fieldValidation"
                               required
                               v-model="inputValue"
                               tabindex="2"
+                              class="email-list-input"
                               placeholder="Enter recipient emails"/>
             </b-input-group>
         </b-form-group>
@@ -77,7 +77,14 @@ export default {
                 }
 
                 if (value && EMAIL_REGEX.test(value)) {
-                    if (!this.mailList.includes(value)) {
+                    let isExisting = false
+                    this.mailList.forEach((itm) => {
+                        if (itm === value) {
+                            isExisting = itm === value
+                        }
+                    })
+
+                    if (!isExisting) {
                         this.mailList.push(value)
                     } else {
                         this.displayMsg(`Input email address already exists.`, 'info')

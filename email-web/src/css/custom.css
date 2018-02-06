@@ -5,13 +5,7 @@
     text-align: center;
     margin-top: 30px;
 }
-#inputGroup1 {
-    padding-left:2px;
-}
-#inputGroup2 {
-    padding-left:2px;
-}
-#inputGroup3 {
+.b-form-group.email-list {
     padding-left:2px;
 }
 .logo {
