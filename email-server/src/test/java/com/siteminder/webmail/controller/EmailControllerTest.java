@@ -91,13 +91,13 @@ public class EmailControllerTest extends TestBase {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is4xxClientError());
 
-        // Empty recipients will throw 400
+        // Empty recipients will throw 500 from validator
         emailModel = getTestEmailModel();
         emailModel.setTo(Collections.EMPTY_LIST);
 
         mvc.perform(post("/api/v1/send")
                 .content(json(emailModel))
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is5xxServerError());
     }
 }

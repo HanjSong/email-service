@@ -38,7 +38,7 @@ public class SendGridRestClientTest {
         HttpHeaders headers = entityArgument.getHeaders();
 
         Assert.assertTrue("Authorization header does not match",
-                headers.get(HttpHeaders.AUTHORIZATION).contains("apikeysendgrid"));
+                headers.get(HttpHeaders.AUTHORIZATION).contains("Bearer apikeysendgrid"));
         Assert.assertTrue("Content-Type header does not match",
                 headers.get(HttpHeaders.CONTENT_TYPE).contains(MediaType.APPLICATION_JSON_UTF8_VALUE));
         Assert.assertTrue("Accept header does not match",

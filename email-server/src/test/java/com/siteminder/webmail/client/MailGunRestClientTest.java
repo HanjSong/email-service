@@ -39,7 +39,7 @@ public class MailGunRestClientTest {
         HttpHeaders headers = entityArgument.getHeaders();
 
         Assert.assertTrue("Authorization header does not match",
-                headers.get(HttpHeaders.AUTHORIZATION).contains("Basic YXBpa2V5bWFpbGd1bg=="));
+                headers.get(HttpHeaders.AUTHORIZATION).contains("Basic YXBpOmFwaWtleW1haWxndW4="));
         Assert.assertTrue("Content-Type header does not match",
                 headers.get(HttpHeaders.CONTENT_TYPE).contains(MediaType.APPLICATION_FORM_URLENCODED_VALUE));
     }
