@@ -45,16 +45,12 @@ public class EmailService {
 
     /**
      * Send email via MailGun provider
-     * Fallback method timeout is be set to 2500 milliseconds as mailgun server response can be slow.
-     * If mailgun server is not healthy and gets delayed, email can be sent twice by fallback call.
-     * Best if stable service such as Sendgrid is set as a main provider.
-     * However, I have set mailgun provider as first one because they allow only whitelisted email addresses, 
-     * which serves the purpose well for testing the fallback calls
+     * Fallback method timeout is be set to false as mailgun server is bit slow.
      * @param mail
      * @return
      */
     @HystrixCommand(fallbackMethod = "fallback", commandProperties = {
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2500")
+            @HystrixProperty(name = "execution.timeout.enabled", value = "false")
     })
     public SendMailResponse send(EmailForm mail) {
         ResponseEntity<MailGunResponseBody> result = this.mailGunRestClient.send(convertToMailGunModel(mail));
