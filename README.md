@@ -40,6 +40,18 @@ mvn -U clean install
 ```
 mvn --projects backend spring-boot:run
 ```
+
+#### In case of Certification Error
+   * If you have older version of JRE, you might get this error during sending request to email providers
+```
+sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
+```
+
+   * To resolve this, Download `DigiCert Global Root G2` certificate from https://www.digicert.com/digicert-root-certificates.htm and run below command with your cacert and file paths 
+```
+keytool -import -trustcacerts -keystore ${JAVA_HOME}/jre/lib/security/cacerts -storepass changeit -noprompt -alias digicert-global-root-g2 -file ~/Downloads/DigiCertGlobalRootG2.crt
+```
+
 ## Accessing the webpage
   * If everything is setup as default, you can now goto `http://localhost:8080` to access page
  1. From, To, Subject and Content fields are required due to providers' limitation
