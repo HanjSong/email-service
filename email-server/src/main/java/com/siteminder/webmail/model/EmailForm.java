@@ -45,6 +45,7 @@ public class EmailForm {
     /**
      * Email subject
      */
+    @NotEmpty(message = "please input subject")
     @JsonProperty("subject")
     private String subject;
 
