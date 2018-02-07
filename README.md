@@ -45,6 +45,27 @@ mvn --projects backend spring-boot:run
  1. From, To, Subject and Content fields are required due to providers' limitation
  2. CC and BCC fields are initially hidden and can be toggled. 
  3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
+ 
+## Running Unit tests
+  * JUnit test is already part of maven project build but to run only tests, simply run below from project base
+  (Front-end test is not yet forced on maven project build process. Added this in todo section)
+  ```
+  mvn test
+  ```
+  * Frontent unit tests are written in Jasmine and Chai. Run below from `email-server/email-web`
+  ```
+  npm run unit
+  ```
+  and you can also check test coverage in console
+```
+=============================== Coverage summary ===============================
+Statements   : 83.18% ( 89/107 )
+Branches     : 88.06% ( 59/67 )
+Functions    : 87.5% ( 21/24 )
+Lines        : 83.18% ( 89/107 )
+================================================================================
+
+```
 
 #### Browser Support (Tested) 
 `Chrome`, `Firefox`, `IE EDGE`, `Safari`, `>= IE 10`
@@ -96,5 +117,7 @@ mvn --projects backend spring-boot:run
  * Sendgrid : https://sendgrid.com/docs/index.html
  
 # TODO
- * IE 11 and below notice message to recommend to use modern browsers.
- * Frontend unit test coverage is currently only around 20%
+ * `Bootstrap-Vue` is used for the UI but currently UI is not fully responsive on smallest view port
+ * IE 11 and below notice message to recommend to use modern browsers
+ * Unit test execution should be included as part of the project build
+ * Consider using Swagger UI for automated rest API documentation when application gets complicated.
