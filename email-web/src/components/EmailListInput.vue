@@ -5,7 +5,7 @@
             <b-col cols="3" class="pr-1 mb-1 pl-0" :key="emailAddr">
                 <b-badge variant="secondary" class="pt-1 pl-2 w-100">
                     <span class="email-txt float-left text-left">{{emailAddr}}</span>
-                    <span class="text float-right mt-1 close" @click="removeMail(mailList, index)">&times;</span>
+                    <span class="text float-right mt-1 close" @click="removeMail(index)">&times;</span>
                 </b-badge>
             </b-col>
             <div class="w-100" v-if="index > 0 && (index + 1) % 3 === 0" :key="index"></div>
@@ -27,14 +27,13 @@
 </template>
 
 <script>
-const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
-
 export default {
     name: 'EmailListInput',
     props: [
         'mailList',
         'displayMsg',
-        'fieldName'
+        'fieldName',
+        'required'
     ],
     data: () => {
         return {
@@ -55,12 +54,12 @@ export default {
             this.inputValue = ''
         },
         validateField: function () {
-            if (this.mailList.length < 1) {
-                this.fieldValidation = !!this.inputValue
+            if (this.required && this.mailList.length < 1) {
+                this.fieldValidation = this.$globalStore.EMAIL_REGEX.test(this.inputValue)
             }
         },
-        removeMail: function (recipientArr, index) {
-            recipientArr.splice(index, 1)
+        removeMail: function (index) {
+            this.mailList.splice(index, 1)
             this.fieldValidation = null
         },
         emailMatcher: function (evt) {
@@ -71,12 +70,9 @@ export default {
             if (onBlur ||
                 (evt.target.value && (evt.keyCode === 13 || evt.keyCode === 186 || evt.keyCode === 188 ||
                     evt.keyCode === 59 || evt.keyCode === 32))) {
-                let value = evt.target.value
-                if (evt.target.value.match(evt.key + '$') && evt.keyCode !== 13) { // endswith
-                    value = evt.target.value.trim().replace(/[.,;]$/, '').trim().toLowerCase()
-                }
+                let value = evt.target.value.trim().replace(/[.,;]$/, '').trim().toLowerCase()
 
-                if (value && EMAIL_REGEX.test(value)) {
+                if (value && this.$globalStore.EMAIL_REGEX.test(value)) {
                     let isExisting = false
                     this.mailList.forEach((itm) => {
                         if (itm === value) {
@@ -102,7 +98,7 @@ export default {
                 // backspace
                 const length = this.mailList.length
                 if (length > 0 && evt.target.value.length === 0 && this.deletePrevFlag) {
-                    this.removeMail(this.mailList, length - 1)
+                    this.removeMail(length - 1)
                     this.deletePrevFlag = false
                 } else if (length > 0 && evt.target.value.length === 0) {
                     this.deletePrevFlag = true

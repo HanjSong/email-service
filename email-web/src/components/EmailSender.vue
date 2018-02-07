@@ -15,8 +15,8 @@
                             <b-form-input id="input0" type="email" v-model.trim="form.from"
                                           @change="emailMatch('from', form.from)" :state="inputValidation.from" required
                                           tabindex=1 placeholder="Enter your email"/>
-                            <b-btn @click="toggleCCInput" :pressed="ccToggle" class="px-3" variant="outline-info">+ CC</b-btn>
-                            <b-btn @click="toggleBCCInput" :pressed="bccToggle" variant="outline-info">+ BCC</b-btn>
+                            <b-btn id="addCCBtn" @click="toggleCCInput" :pressed="ccToggle" class="px-3" variant="outline-info">+ CC</b-btn>
+                            <b-btn id="addBCCBtn" @click="toggleBCCInput" :pressed="bccToggle" variant="outline-info">+ BCC</b-btn>
                         </b-input-group>
                     </b-form-group>
 
@@ -24,7 +24,8 @@
                         ref="toInput"
                         :mailList="form.to"
                         fieldName="To"
-                        :displayMsg="displayMsg">
+                        :displayMsg="displayMsg"
+                        required="true">
                     </email-list-input>
 
                     <email-list-input
@@ -56,7 +57,7 @@
                     </b-form-group>
                     <div class="float-right">
                         <div class="loader" v-if="showLoader"></div>
-                        <b-button type="button" @click="sendEmail" variant="info" :disabled="showLoader" tabindex=5>Submit</b-button>
+                        <b-button id="submitBtn" type="button" @click="sendEmail" variant="info" :disabled="showLoader" tabindex=5>Submit</b-button>
                         <b-button type="reset" :disabled="showLoader" tabindex=6>Clear</b-button>
                     </div>
                 </b-form>
@@ -68,8 +69,6 @@
 <script>
 import axios from 'axios'
 import EmailListInput from './EmailListInput.vue'
-// EMAIL REGEX which closely match RFC 2822
-const EMAIL_REGEX = /^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/
 
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
@@ -132,13 +131,12 @@ export default {
             recipientArr.splice(index, 1)
         },
         emailMatch: function (target, value) {
-            this.inputValidation[target] = EMAIL_REGEX.test(value)
+            this.inputValidation[target] = this.$globalStore.EMAIL_REGEX.test(value)
         },
         valueValidation: function (target) {
             this.inputValidation[target] = !!this.form[target]
         },
         toValidation: function () {
-            // Emit event for child component to validate
             this.$eventHub.$emit('email-list-validation')
         },
         sendEmail: function () {
@@ -158,7 +156,6 @@ export default {
             // to clear message, call without parameters
             this.alertMsg.message = message || ''
             this.alertMsg.msgType = msgType || 'light'
-
             if (msgType === 'danger') {
                 if (this.$el.querySelector('#message').scrollIntoView) {
                     this.$el.querySelector('#message').scrollIntoView()
@@ -170,7 +167,7 @@ export default {
         },
         process: function () {
             const data = JSON.stringify(this.form)
-            axios.post(`api/v1/send`, data)
+            this.getData(data)
                 .then(response => {
                     if (response.status === 200 && response.data && response.data.responseCode === 'SUCCESS') {
                         this.onReset()
@@ -186,6 +183,9 @@ export default {
                     this.displayMsg(`Something went wrong.`, 'danger')
                     this.disableBtn(false)
                 })
+        },
+        getData: function (data) {
+            return axios.post(`api/v1/send`, data)
         },
         disableBtn: function (disable) {
             this.showLoader = disable
