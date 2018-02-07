@@ -118,6 +118,5 @@ Lines        : 83.18% ( 89/107 )
  
 # TODO
  * `Bootstrap-Vue` is used for the UI but currently UI is not fully responsive on smallest view port
- * IE 11 and below notice message to recommend to use modern browsers
  * Unit test execution should be included as part of the project build
  * Consider using Swagger UI for automated rest API documentation when application gets complicated.
