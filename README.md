@@ -44,7 +44,8 @@ mvn --projects backend spring-boot:run
   * If everything is setup as default, you can now goto `http://localhost:8080` to access page
  1. From, To, Subject and Content fields are required due to providers' limitation
  2. CC and BCC fields are initially hidden and can be toggled. 
- 3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
+ 3. TO, CC and BCC accepts multiple values up to 9 each. (Just an restriction on UI as too many rows will not look good)
+ 4. List of input email values will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
  
 ## Running Unit tests
   * JUnit test is already part of maven project build, but to run only tests, simply run below from project base
