@@ -47,8 +47,8 @@ mvn --projects backend spring-boot:run
  3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
  
 ## Running Unit tests
-  * JUnit test is already part of maven project build but to run only tests, simply run below from project base
-  (Front-end test is not yet forced on maven project build process. Added this in todo section)
+  * JUnit test is already part of maven project build, but to run only tests, simply run below from project base
+     * (Front-end test is not yet forced on maven project build process. Added this in todo section)
   ```
   mvn test
   ```
