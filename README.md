@@ -119,4 +119,5 @@ Lines        : 83.18% ( 89/107 )
 # TODO
  * `Bootstrap-Vue` is used for the UI but currently UI is not fully responsive on smallest view port
  * Unit test execution should be included as part of the project build
+ * Kindly display error notice during maven build that API_KEYs are required to be set in environment variable
  * Consider using Swagger UI for automated rest API documentation when application gets complicated.
