@@ -44,11 +44,12 @@ mvn --projects backend spring-boot:run
   * If everything is setup as default, you can now goto `http://localhost:8080` to access page
  1. From, To, Subject and Content fields are required due to providers' limitation
  2. CC and BCC fields are initially hidden and can be toggled. 
- 3. TO, CC and BCC accepts multiple values up to 10 each. Input email value will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
+ 3. TO, CC and BCC accepts multiple values up to 9 each. (Just an restriction on UI as too many rows will not look good)
+ 4. List of input email values will be validated when `,` `;` `space` `enter` key or `blur` event is fired.
  
 ## Running Unit tests
-  * JUnit test is already part of maven project build but to run only tests, simply run below from project base
-  (Front-end test is not yet forced on maven project build process. Added this in todo section)
+  * JUnit test is already part of maven project build, but to run only tests, simply run below from project base
+     * (Front-end test is not yet forced on maven project build process. Added this in todo section)
   ```
   mvn test
   ```
@@ -118,6 +119,7 @@ Lines        : 83.18% ( 89/107 )
  
 # TODO
  * `Bootstrap-Vue` is used for the UI but currently UI is not fully responsive on smallest view port
+ * All core-js libraries are added in `main.js` file due to `Internet Explorer` support. However, not all packages are needed, and need to clean this up to have smaller js package. 
  * Unit test execution should be included as part of the project build
  * Kindly display error notice during maven build that API_KEYs are required to be set in environment variable
  * Consider using Swagger UI for automated rest API documentation when application gets complicated.
